@@ -15,6 +15,7 @@ class sca_newsletter {
 	function is_newsletter_new() {
 		$old_url = get_option('sca_newsletter_url','');
 		$old_id = get_option('sca_newsletter_id',0);
+		$old_month = get_option('sca_newsletter_month');
 		if ($old_url == $this->url) {
 			return(false);
 		} else {
@@ -27,13 +28,14 @@ class sca_newsletter {
 		$month = date('n');
 		$day = date('j');
 		$year = date('Y');
-		if ($day > 15) {
+		if ($day > 10) {
 			$month++;
 		}
 		if ($month > 12) {
 			$year++;
 			$month = 1;
 		}
+		$this->month = $month;
 		$temp_filename = "SCA_Acorn_". date('M-Y',mktime(0, 0, 0, $month, 1, $year)) . '.pdf';
 		$this->temp_file = SCA_NEWSLETTER_TMP . "/" . $temp_filename;
 		$ch = curl_init();
@@ -113,6 +115,7 @@ class sca_newsletter {
 	function update_newsletter() {
 		update_option('sca_newsletter_url',$this->url);
 		update_option('sca_newsletter_id', $this->attachment_id);
+		update_option('sca_newsletter_month', $this->month);
 		// Add Logging
 	}
 
